@@ -1,7 +1,8 @@
-﻿namespace HR.LeaveManagement.Domain;
-public class LeaveRequest
+﻿using HR.LeaveManagement.Domain.Common;
+
+namespace HR.LeaveManagement.Domain;
+public class LeaveRequest : BaseDomainEntity
 {
-    public int Id { get; set; }
     public DateTime StratDate { get; set; }
     public DateTime EndDate { get; set; }
     public LeaveType LeaveType { get; set; }
