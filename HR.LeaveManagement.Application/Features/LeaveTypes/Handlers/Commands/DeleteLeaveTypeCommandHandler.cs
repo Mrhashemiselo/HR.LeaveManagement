@@ -4,13 +4,20 @@ using HR.LeaveManagement.Application.Persistence.Contracts;
 using MediatR;
 
 namespace HR.LeaveManagement.Application.Features.LeaveTypes.Handlers.Commands;
-public class DeleteLeaveTypeCommandHandler(ILeaveTypeRepository leaveTypeRepository,
-    IMapper mapper) : IRequestHandler<DeleteLeaveTypeCommand>
+public class DeleteLeaveTypeCommandHandler : IRequestHandler<DeleteLeaveTypeCommand>
 {
-    public async Task<Unit> Handle(DeleteLeaveTypeCommand request, CancellationToken cancellationToken)
+    private readonly ILeaveTypeRepository _leaveTypeRepository;
+    private readonly IMapper _mapper;
+    public DeleteLeaveTypeCommandHandler(ILeaveTypeRepository leaveTypeRepository,
+    IMapper mapper)
     {
-        var leaveType = await leaveTypeRepository.Get(request.Id);
-        await leaveTypeRepository.Delete(leaveType);
-        return Unit.Value;
+        _leaveTypeRepository = leaveTypeRepository;
+        _mapper = mapper;
+    }
+    public async Task/*<Unit>*/ Handle(DeleteLeaveTypeCommand request, CancellationToken cancellationToken)
+    {
+        var leaveType = await _leaveTypeRepository.Get(request.Id);
+        await _leaveTypeRepository.Delete(leaveType);
+        //return Unit.Value;
     }
 }
