@@ -1,9 +1,9 @@
-﻿using HR.LeaveManagement.Domain;
+using HR.LeaveManagement.Domain;
 
-namespace HR.LeaveManagement.Application.Persistence.Contracts;
-public interface ILeaveRequestRepository : IGenericRepository<LeaveRequest>
+namespace HR.LeaveManagement.Application.Persistence.Contracts
 {
-    Task<LeaveRequest> GetLeaveRequestWithDetails(int id);
-    Task<List<LeaveRequest>> GetLeaveRequestsWithDetails();
-    Task ChangeApprovalStatus(LeaveRequest leaveRequest, bool? ApprovalStatus);
+    public interface ILeaveRequestRepository: IGenericRepository<LeaveRequest>
+    {
+        
+    }
 }
