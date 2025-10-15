@@ -1,8 +1,6 @@
-using HR.LeaveManagement.Application.DTOs.Common;
-
 namespace HR.LeaveManagement.Application.DTOs.LeaveAllocation
 {
-    public class CreateLeaveAllocationDto
+    public interface ILeaveAllocationDto
     {
         public int NumberOfDays { get; set; }
         public int LeaveTypeId { get; set; }
