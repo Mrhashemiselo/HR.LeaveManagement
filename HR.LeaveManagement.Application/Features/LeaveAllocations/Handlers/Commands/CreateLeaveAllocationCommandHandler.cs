@@ -1,9 +1,10 @@
 using System;
 using System.Threading;
 using AutoMapper;
-using HR.LeaveManagement.Application.Persistence.Contracts;
 using MediatR;
 using System.Threading.Tasks;
+using HR.LeaveManagement.Application.Contracts.Persistence;
+using HR.LeaveManagement.Application.Contracts.Persistence;
 using HR.LeaveManagement.Application.DTOs.LeaveAllocation;
 using HR.LeaveManagement.Application.DTOs.LeaveAllocation.Validators;
 using HR.LeaveManagement.Application.Exceptions;

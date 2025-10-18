@@ -1,6 +1,7 @@
 using System;
 using FluentValidation;
-using HR.LeaveManagement.Application.Persistence.Contracts;
+using HR.LeaveManagement.Application.Contracts.Persistence;
+using HR.LeaveManagement.Application.Contracts.Persistence;
 
 namespace HR.LeaveManagement.Application.DTOs.LeaveAllocation.Validators
 {
@@ -19,13 +20,12 @@ namespace HR.LeaveManagement.Application.DTOs.LeaveAllocation.Validators
 
             RuleFor(p => p.LeaveTypeId)
                 .GreaterThan(0)
-                .MustAsync(async (id, token) => 
+                .MustAsync(async (id, token) =>
                 {
                     var leaveTypeExists = await _leaveTypeRepository.Exists(id);
                     return leaveTypeExists;
                 })
                 .WithMessage("{PropertyName} does not exist.");
-            
         }
     }
 }
