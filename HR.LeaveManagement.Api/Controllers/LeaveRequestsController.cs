@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HR.LeaveManagement.Api.Controllers;
 
-public class LeaveRequestsController(IMediator mediator) : Controller
+[Route("api/[controller]")]
+[ApiController]
+public class LeaveRequestsController(IMediator mediator) : ControllerBase
 {
     // Get: api/<LeaveRequestsController>
     [HttpGet]

@@ -15,6 +15,7 @@ builder.Services.ConfigurePersistenceServices(builder.Configuration);
 #endregion
 
 builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 
 builder.Services.AddCors(c =>
 {
@@ -29,13 +30,26 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+    });
+}
+else
+{
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+    });
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseCors("CorsPolicy");
+
+app.MapDefaultControllerRoute();
 
 app.Run();
