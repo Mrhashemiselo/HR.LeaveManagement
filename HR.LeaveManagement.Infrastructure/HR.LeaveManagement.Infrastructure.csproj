@@ -10,7 +10,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+      <PackageReference Include="MediatR" Version="13.1.0" />
       <PackageReference Include="microsoft.extensions.options.configurationextensions" Version="9.0.10" />
       <PackageReference Include="SendGrid" Version="9.29.3" />
     </ItemGroup>

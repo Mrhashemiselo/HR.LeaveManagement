@@ -32,7 +32,9 @@ public class CreateLeaveTypeCommandHandler : IRequestHandler<CreateLeaveTypeComm
         {
             response.Success = false;
             response.Message = "Creation Failed";
-            response.Errors = validationResult.Errors.Select(q => q.ErrorMessage).ToList();
+            response.Errors = validationResult.Errors
+                .Select(q => q.ErrorMessage)
+                .ToList();
         }
         else
         {

@@ -1,9 +1,8 @@
 using MediatR;
 
-namespace HR.LeaveManagement.Application.Features.LeaveTypes.Requests.Commands
+namespace HR.LeaveManagement.Application.Features.LeaveTypes.Requests.Commands;
+
+public class DeleteLeaveTypeCommand : IRequest<Unit>
 {
-    public class DeleteLeaveTypeCommand : IRequest
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }
