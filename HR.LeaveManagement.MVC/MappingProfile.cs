@@ -10,5 +10,6 @@ public class MappingProfile : Profile
     {
         CreateMap<CreateLeaveTypeDto, CreateLeaveTypeVM>().ReverseMap();
         CreateMap<LeaveTypeDto, LeaveTypeVM>().ReverseMap();
+        CreateMap<RegisterVM, RegistrationRequest>().ReverseMap();
     }
 }

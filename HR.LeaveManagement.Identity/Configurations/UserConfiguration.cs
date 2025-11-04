@@ -22,9 +22,11 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             NormalizedUserName = "ADMIN@LOCAL.COM",
             EmailConfirmed = true,
             SecurityStamp = "6E0465BE-8B27-4EC8-BB61-F75E47D527AB",
-            ConcurrencyStamp = "74C91904-C748-4349-A6F9-6D0BF259AB6F"
+            ConcurrencyStamp = "74C91904-C748-4349-A6F9-6D0BF259AB6F",
+            PasswordHash = hasher.HashPassword(null, "1qaz!QAZ")
+
         };
-        admin.PasswordHash = hasher.HashPassword(admin, "1qaz!QAZ");
+        //admin.PasswordHash = hasher.HashPassword(admin, "1qaz!QAZ");
 
         // Regular User
         var user = new ApplicationUser
@@ -38,11 +40,13 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             NormalizedUserName = "USER@LOCAL.COM",
             EmailConfirmed = true,
             SecurityStamp = "2A7FA37A-4078-432D-88CE-09CB2C63D7A6",
-            ConcurrencyStamp = "2A7FA37A-4078-432D-88CE-09CB2C63D7A6"
+            ConcurrencyStamp = "2A7FA37A-4078-432D-88CE-09CB2C63D7A6",
+            PasswordHash = hasher.HashPassword(null, "1qaz!QAZ")
         };
-        user.PasswordHash = hasher.HashPassword(user, "1qaz!QAZ");
+        //user.PasswordHash = hasher.HashPassword(user, "1qaz!QAZ");
 
-        builder.HasData(admin, user);
+        builder.HasData(admin);
+        builder.HasData(user);
     }
 }
 

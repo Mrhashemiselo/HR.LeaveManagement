@@ -181,7 +181,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseCommandResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseCommandResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseCommandResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -828,15 +845,7 @@
       "CreateLeaveAllocationDto": {
         "type": "object",
         "properties": {
-          "numberOfDays": {
-            "type": "integer",
-            "format": "int32"
-          },
           "leaveTypeId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "period": {
             "type": "integer",
             "format": "int32"
           }

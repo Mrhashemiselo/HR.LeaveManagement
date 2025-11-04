@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR.LeaveManagement.Identity.Migrations
 {
     [DbContext(typeof(LeaveManagementIdentityDbContext))]
-    [Migration("20251102052853_InitialUsersTables")]
-    partial class InitialUsersTables
+    [Migration("20251103055540_InitialIdentityTables")]
+    partial class InitialIdentityTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,7 +110,7 @@ namespace HR.LeaveManagement.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCAL.COM",
                             NormalizedUserName = "ADMIN@LOCAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ5ewsY8fb31zJPFls9X64Qc7G9j9ekemXdx72frnuPlnS+RUtpyETUdyVULeTT8JQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMBtD4GpmUjN0CoLpjcBcyfh/HoMh2/ple0cc68ptTNpAM3Ub/s80NX1cGJ1yRNQ5A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "6E0465BE-8B27-4EC8-BB61-F75E47D527AB",
                             TwoFactorEnabled = false,
@@ -128,7 +128,7 @@ namespace HR.LeaveManagement.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCAL.COM",
                             NormalizedUserName = "USER@LOCAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMLKS8bTXNRX4Ueo047MRJycN7STQz927YLjzTltQAisGccx6l6jweLm4UmlfwZfjg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELOx/CDQqxCgSi29ryx38o/lJ1R7VPwtyOpW2EUugnhfhtcTcL1RGH2QhMphsNFhaA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "2A7FA37A-4078-432D-88CE-09CB2C63D7A6",
                             TwoFactorEnabled = false,

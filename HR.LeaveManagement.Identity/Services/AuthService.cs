@@ -2,6 +2,7 @@
 using HR.LeaveManagement.Application.Models.Identity;
 using HR.LeaveManagement.Identity.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,14 +14,15 @@ public class AuthService : IAuthService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly JwtSettings _jwtSettings;
-    public AuthService(UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
-        JwtSettings jwtSettings)
+
+    public AuthService(
+         UserManager<ApplicationUser> userManager,
+         SignInManager<ApplicationUser> signInManager,
+         IOptions<JwtSettings> jwtOptions)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _jwtSettings = jwtSettings;
-
+        _jwtSettings = jwtOptions.Value;
     }
 
     public async Task<AuthResponse> Login(AuthRequest request)

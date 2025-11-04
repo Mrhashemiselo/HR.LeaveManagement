@@ -1,26 +1,23 @@
 ﻿using AutoMapper;
+using HR.LeaveManagement.MVC.Contracts;
 using HR.LeaveManagement.MVC.Models;
 using HR.LeaveManagement.MVC.Services.Base;
 
-namespace HR.LeaveManagement.MVC.Contracts;
+namespace HR.LeaveManagement.MVC.Services;
 
 public class LeaveTypeService : BaseHttpService, ILeaveTypeService
 {
-    private readonly ILocalStorageService _localStorage;
-    private readonly IClient _httpClient;
+    private readonly ILocalStorageService _localStorageService;
     private readonly IMapper _mapper;
+    private readonly IClient _httpClient;
 
-    /// <ImportantNote>
-    /// _client Used from BaseHttpService class
-    /// </ImportantNote>
-
-    public LeaveTypeService(ILocalStorageService localStorage,
-        IClient httpClient,
-        IMapper mapper) : base(localStorage, httpClient)
+    public LeaveTypeService(IMapper mapper,
+        ILocalStorageService localStorageService,
+        IClient httpClient) : base(localStorageService, httpClient)
     {
-        _localStorage = localStorage;
-        _httpClient = httpClient;
         _mapper = mapper;
+        _localStorageService = localStorageService;
+        _httpClient = httpClient;
     }
 
     public async Task<Response<int>> CreateLeaveType(CreateLeaveTypeVM leaveType)
@@ -29,11 +26,12 @@ public class LeaveTypeService : BaseHttpService, ILeaveTypeService
         {
             var response = new Response<int>();
             CreateLeaveTypeDto createLeaveType = _mapper.Map<CreateLeaveTypeDto>(leaveType);
+            AddBearerToken();
             var apiResponse = await _client.LeaveTypesPOSTAsync(createLeaveType);
             if (apiResponse.Success)
             {
-                response.Success = true;
                 response.Data = apiResponse.Id;
+                response.Success = true;
             }
             else
             {
@@ -54,10 +52,11 @@ public class LeaveTypeService : BaseHttpService, ILeaveTypeService
     {
         try
         {
-            await _client.LeaveRequestsDELETEAsync(id);
-            return new Response<int>()
+            AddBearerToken();
+            await _client.LeaveTypesDELETEAsync(id);
+            return new Response<int>
             {
-                Success = true,
+                Success = true
             };
         }
         catch (ApiException ex)
@@ -68,13 +67,15 @@ public class LeaveTypeService : BaseHttpService, ILeaveTypeService
 
     public async Task<LeaveTypeVM> GetLeaveTypeDetails(int id)
     {
+        AddBearerToken();
         var leaveType = await _client.LeaveAllocationsGETAsync(id);
         return _mapper.Map<LeaveTypeVM>(leaveType);
     }
 
     public async Task<List<LeaveTypeVM>> GetLeaveTypes()
     {
-        var leaveTypes = await _client.LeaveTypesAllAsync();
+        AddBearerToken();
+        var leaveTypes = await _client.LeaveAllocationsAllAsync();
         return _mapper.Map<List<LeaveTypeVM>>(leaveTypes);
     }
 
@@ -83,6 +84,7 @@ public class LeaveTypeService : BaseHttpService, ILeaveTypeService
         try
         {
             LeaveTypeDto leaveTypeDto = _mapper.Map<LeaveTypeDto>(leaveType);
+            AddBearerToken();
             await _client.LeaveTypesPUTAsync(leaveTypeDto);
             return new Response<int>()
             {

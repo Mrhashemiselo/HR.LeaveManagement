@@ -13,19 +13,33 @@ using System.Text;
 namespace HR.LeaveManagement.Identity;
 public static class IdentityServicesRegistration
 {
-    public static IServiceCollection ConfigureIdentityServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureIdentityServices(this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
         services.AddDbContext<LeaveManagementIdentityDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("LeaveManagementIdentityConnectionString"),
+        options.UseSqlServer(
+            configuration.GetConnectionString("LeaveManagementIdentityConnectionString"),
             m => m.MigrationsAssembly(typeof(LeaveManagementIdentityDbContext).Assembly.FullName)));
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            // Password rules — optional, you can adjust as needed
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.User.RequireUniqueEmail = true;
+        })
             .AddEntityFrameworkStores<LeaveManagementIdentityDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddTransient<IAuthService, AuthService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+
+        var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
         services.AddAuthentication(options =>
         {
@@ -41,9 +55,10 @@ public static class IdentityServicesRegistration
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = configuration["JwtSettings:Issuer"],
-                    ValidAudience = configuration["JwtSettings:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
+                    ValidIssuer = jwtSettings?.Issuer,
+                    ValidAudience = jwtSettings?.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtSettings?.Key ?? throw new InvalidOperationException("JWT Key not found")))
                 };
             });
 
