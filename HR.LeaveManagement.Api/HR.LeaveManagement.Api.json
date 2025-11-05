@@ -109,6 +109,16 @@
         "tags": [
           "LeaveAllocations"
         ],
+        "parameters": [
+          {
+            "name": "isLoggedIn",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -343,7 +353,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseCommandResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseCommandResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseCommandResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -744,8 +771,7 @@
         "type": "object",
         "properties": {
           "approved": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "id": {
             "type": "integer",
@@ -794,6 +820,23 @@
           }
         }
       },
+      "Employee": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          }
+        }
+      },
       "LeaveAllocationDto": {
         "type": "object",
         "properties": {
@@ -803,6 +846,12 @@
           },
           "leaveType": {
             "$ref": "#/components/schemas/LeaveTypeDto"
+          },
+          "employee": {
+            "$ref": "#/components/schemas/Employee"
+          },
+          "employeeId": {
+            "type": "string"
           },
           "leaveTypeId": {
             "type": "integer",
@@ -828,6 +877,12 @@
           "endDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "employee": {
+            "$ref": "#/components/schemas/Employee"
+          },
+          "requestingEmployeeId": {
+            "type": "string"
           },
           "leaveType": {
             "$ref": "#/components/schemas/LeaveTypeDto"

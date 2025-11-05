@@ -33,6 +33,7 @@ public class LeaveTypesController(IMediator mediator) : ControllerBase
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult<BaseCommandResponse>> Post([FromBody] CreateLeaveTypeDto leaveType)
     {
         var command = new CreateLeaveTypeCommand()
@@ -45,6 +46,7 @@ public class LeaveTypesController(IMediator mediator) : ControllerBase
 
     //PUT api/<LeaveTypesController>
     [HttpPut]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> Put([FromBody] LeaveTypeDto leaveType)
     {
         var command = new UpdateLeaveTypeCommand()
@@ -57,6 +59,7 @@ public class LeaveTypesController(IMediator mediator) : ControllerBase
 
     //DELETE api/<LeaveTypesController>/5
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> Delete(int id)
     {
         var command = new DeleteLeaveTypeCommand()

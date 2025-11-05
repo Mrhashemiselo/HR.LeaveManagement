@@ -1,42 +1,51 @@
 ﻿using HR.LeaveManagement.MVC.Contracts;
-using HR.LeaveManagement.MVC.Models;
+using HR.LeaveManagement.MVC.Models.LeaveType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR.LeaveManagement.MVC.Controllers;
 
 [Authorize(Roles = "Administrator")]
-public class LeaveTypesController(ILeaveTypeService leaveTypeService,
-    ILeaveAllocationService leaveAllocationService) : Controller
+public class LeaveTypesController : Controller
 {
-    // GET: LeaveTypeController
+    private readonly ILeaveTypeService _leaveTypeService;
+    private readonly ILeaveAllocationService _leaveAllocationService;
+
+    public LeaveTypesController(ILeaveTypeService leaveTypeService, ILeaveAllocationService leaveAllocationService)
+    {
+        this._leaveTypeService = leaveTypeService;
+        this._leaveAllocationService = leaveAllocationService;
+    }
+
+    // GET: LeaveTypesController
     public async Task<ActionResult> Index()
     {
-        var result = await leaveTypeService.GetLeaveTypes();
-        return View(result);
+        var model = await _leaveTypeService.GetLeaveTypes();
+        return View(model);
     }
 
-    // GET: LeaveTypeController/Details/5
+    // GET: LeaveTypesController/Details/5
     public async Task<ActionResult> Details(int id)
     {
-        var result = await leaveTypeService.GetLeaveTypeDetails(id);
-        return View(result);
+        var model = await _leaveTypeService.GetLeaveTypeDetails(id);
+
+        return View(model);
     }
 
-    // GET: LeaveTypeController/Create
+    // GET: LeaveTypesController/Create
     public async Task<ActionResult> Create()
     {
         return View();
     }
 
-    // POST: LeaveTypeController/Create
+    // POST: LeaveTypesController/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Create(CreateLeaveTypeVM model)
+    public async Task<ActionResult> Create(CreateLeaveTypeVM leaveType)
     {
         try
         {
-            var response = await leaveTypeService.CreateLeaveType(model);
+            var response = await _leaveTypeService.CreateLeaveType(leaveType);
             if (response.Success)
             {
                 return RedirectToAction(nameof(Index));
@@ -47,34 +56,39 @@ public class LeaveTypesController(ILeaveTypeService leaveTypeService,
         {
             ModelState.AddModelError("", ex.Message);
         }
+
+        return View(leaveType);
+    }
+
+    // GET: LeaveTypesController/Edit/5
+    public async Task<ActionResult> Edit(int id)
+    {
+        var model = await _leaveTypeService.GetLeaveTypeDetails(id);
+
         return View(model);
     }
 
-    // GET: LeaveTypeController/Edit/5
-    public async Task<ActionResult> Edit(int id)
-    {
-        var result = await leaveTypeService.GetLeaveTypeDetails(id);
-        return View(result);
-    }
-
-    // POST: LeaveTypeController/Edit/5
+    // POST: LeaveTypesController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Edit(LeaveTypeVM model)
+    public async Task<ActionResult> Edit(int id, LeaveTypeVM leaveType)
     {
         try
         {
-            var response = await leaveTypeService.UpdateLeaveType(model);
+            var response = await _leaveTypeService.UpdateLeaveType(id, leaveType);
             if (response.Success)
             {
                 return RedirectToAction(nameof(Index));
             }
+
+            ModelState.AddModelError("", response.ValidationErrors);
         }
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
         }
-        return View(model);
+
+        return View(leaveType);
     }
 
     [HttpPost]
@@ -83,9 +97,11 @@ public class LeaveTypesController(ILeaveTypeService leaveTypeService,
     {
         try
         {
-            var response = await leaveTypeService.DeleteLeaveType(id);
+            var response = await _leaveTypeService.DeleteLeaveType(id);
             if (response.Success)
+            {
                 return RedirectToAction(nameof(Index));
+            }
 
             ModelState.AddModelError("", response.ValidationErrors);
         }
@@ -93,7 +109,8 @@ public class LeaveTypesController(ILeaveTypeService leaveTypeService,
         {
             ModelState.AddModelError("", ex.Message);
         }
-        return BadRequest();
+
+        return View();
     }
 
     [HttpPost]
@@ -102,7 +119,7 @@ public class LeaveTypesController(ILeaveTypeService leaveTypeService,
     {
         try
         {
-            var response = await leaveAllocationService.CreateLeaveAllocation(id);
+            var response = await _leaveAllocationService.CreateLeaveAllocation(id);
             if (response.Success)
             {
                 return RedirectToAction(nameof(Index));
@@ -112,6 +129,7 @@ public class LeaveTypesController(ILeaveTypeService leaveTypeService,
         {
             ModelState.AddModelError("", ex.Message);
         }
+
         return BadRequest();
     }
 }

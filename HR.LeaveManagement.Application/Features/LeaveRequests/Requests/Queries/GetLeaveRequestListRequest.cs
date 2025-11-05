@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using HR.LeaveManagement.Application.DTOs.LeaveRequest;
 using MediatR;
+using System.Collections.Generic;
 
-namespace HR.LeaveManagement.Application.Features.LeaveRequests.Requests.Queries
+namespace HR.LeaveManagement.Application.Features.LeaveRequests.Requests.Queries;
+
+public class GetLeaveRequestListRequest : IRequest<List<LeaveRequestListDto>>
 {
-    public class GetLeaveRequestListRequest : IRequest<List<LeaveRequestListDto>>
-    {
-        
-    }
+    public bool IsLoggedInUser { get; set; }
 }

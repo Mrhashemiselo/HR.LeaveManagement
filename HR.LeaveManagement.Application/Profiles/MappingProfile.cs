@@ -4,35 +4,37 @@ using HR.LeaveManagement.Application.DTOs.LeaveRequest;
 using HR.LeaveManagement.Application.DTOs.LeaveType;
 using HR.LeaveManagement.Domain;
 
-namespace HR.LeaveManagement.Application.Profiles
+namespace HR.LeaveManagement.Application.Profiles;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            #region LeaveRequest Mappings
+        #region LeaveRequest Mappings
 
-            CreateMap<LeaveRequest, LeaveRequestDto>().ReverseMap();
-            CreateMap<LeaveRequest, LeaveRequestListDto>().ReverseMap();
-            CreateMap<LeaveRequest, CreateLeaveRequestDto>().ReverseMap();
-            CreateMap<LeaveRequest, UpdateLeaveRequestDto>().ReverseMap();
+        CreateMap<LeaveRequest, LeaveRequestDto>().ReverseMap();
+        CreateMap<LeaveRequest, LeaveRequestListDto>()
+            .ForMember(dest => dest.DateRequested,
+            opt => opt.MapFrom(m => m.DateCreated))
+            .ReverseMap();
+        CreateMap<LeaveRequest, CreateLeaveRequestDto>().ReverseMap();
+        CreateMap<LeaveRequest, UpdateLeaveRequestDto>().ReverseMap();
 
-            #endregion LeaveRequest
+        #endregion LeaveRequest
 
-            #region LeaveAllocation Mappings
+        #region LeaveAllocation Mappings
 
-            CreateMap<LeaveAllocation, LeaveAllocationDto>().ReverseMap();
-            CreateMap<LeaveAllocation, CreateLeaveAllocationDto>().ReverseMap();
-            CreateMap<LeaveAllocation, UpdateLeaveAllocationDto>().ReverseMap();
+        CreateMap<LeaveAllocation, LeaveAllocationDto>().ReverseMap();
+        CreateMap<LeaveAllocation, CreateLeaveAllocationDto>().ReverseMap();
+        CreateMap<LeaveAllocation, UpdateLeaveAllocationDto>().ReverseMap();
 
-            #endregion LeaveAllocation
+        #endregion LeaveAllocation
 
-            #region LeaveType Mappings
+        #region LeaveType Mappings
 
-            CreateMap<LeaveType, LeaveTypeDto>().ReverseMap();
-            CreateMap<LeaveType, CreateLeaveTypeDto>().ReverseMap();
+        CreateMap<LeaveType, LeaveTypeDto>().ReverseMap();
+        CreateMap<LeaveType, CreateLeaveTypeDto>().ReverseMap();
 
-            #endregion LeaveType
-        }
+        #endregion LeaveType
     }
 }
