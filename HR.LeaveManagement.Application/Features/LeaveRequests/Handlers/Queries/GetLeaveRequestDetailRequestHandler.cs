@@ -11,22 +11,22 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequests.Handlers.Queries
 
 public class GetLeaveRequestDetailRequestHandler : IRequestHandler<GetLeaveRequestDetailRequest, LeaveRequestDto>
 {
-    private readonly ILeaveRequestRepository _leaveRequestRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IUserService _userService;
 
-    public GetLeaveRequestDetailRequestHandler(ILeaveRequestRepository leaveRequestRepository,
+    public GetLeaveRequestDetailRequestHandler(IUnitOfWork unitOfWork,
         IMapper mapper,
         IUserService userService)
     {
-        _leaveRequestRepository = leaveRequestRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _userService = userService;
     }
 
     public async Task<LeaveRequestDto> Handle(GetLeaveRequestDetailRequest request, CancellationToken cancellationToken)
     {
-        var leaveRequest = await _leaveRequestRepository.GetLeaveRequestWithDetails(request.Id);
+        var leaveRequest = await _unitOfWork.LeaveRequestRepository.GetLeaveRequestWithDetails(request.Id);
         return _mapper.Map<LeaveRequestDto>(leaveRequest);
     }
 }

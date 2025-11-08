@@ -15,17 +15,17 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequests.Handlers.Queries
 
 public class GetLeaveRequestListRequestHandler : IRequestHandler<GetLeaveRequestListRequest, List<LeaveRequestListDto>>
 {
-    private readonly ILeaveRequestRepository _leaveRequestRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IUserService _userService;
 
-    public GetLeaveRequestListRequestHandler(ILeaveRequestRepository leaveRequestRepository,
+    public GetLeaveRequestListRequestHandler(IUnitOfWork unitOfWork,
         IMapper mapper,
         IHttpContextAccessor contextAccessor,
         IUserService userService)
     {
-        _leaveRequestRepository = leaveRequestRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _contextAccessor = contextAccessor;
         _userService = userService;
@@ -38,7 +38,7 @@ public class GetLeaveRequestListRequestHandler : IRequestHandler<GetLeaveRequest
         if (request.IsLoggedInUser)
         {
             var userId = _contextAccessor.HttpContext.User.FindFirst(f => f.Type == CustomClaimType.Uid)?.Value;
-            leaveRequests = await _leaveRequestRepository.GetLeaveRequestsWithDetails(userId);
+            leaveRequests = await _unitOfWork.LeaveRequestRepository.GetLeaveRequestsWithDetails(userId);
             var employee = await _userService.GetEmployee(userId);
             requests = _mapper.Map<List<LeaveRequestListDto>>(leaveRequests);
             foreach (var req in requests)
@@ -48,7 +48,7 @@ public class GetLeaveRequestListRequestHandler : IRequestHandler<GetLeaveRequest
         }
         else
         {
-            leaveRequests = await _leaveRequestRepository.GetLeaveRequestsWithDetails();
+            leaveRequests = await _unitOfWork.LeaveRequestRepository.GetLeaveRequestsWithDetails();
             requests = _mapper.Map<List<LeaveRequestListDto>>(leaveRequests);
             foreach (var req in requests)
             {
