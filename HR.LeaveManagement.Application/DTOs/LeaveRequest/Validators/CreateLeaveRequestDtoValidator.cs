@@ -1,17 +1,15 @@
 using FluentValidation;
 using HR.LeaveManagement.Application.Contracts.Persistence;
-using HR.LeaveManagement.Application.Contracts.Persistence;
 
-namespace HR.LeaveManagement.Application.DTOs.LeaveRequest.Validators
+namespace HR.LeaveManagement.Application.DTOs.LeaveRequest.Validators;
+
+public class CreateLeaveRequestDtoValidator : AbstractValidator<CreateLeaveRequestDto>
 {
-    public class CreateLeaveRequestDtoValidator:AbstractValidator<CreateLeaveRequestDto>
-    {
-        private readonly ILeaveTypeRepository _leaveTypeRepository;
+    private readonly ILeaveTypeRepository _leaveTypeRepository;
 
-        public CreateLeaveRequestDtoValidator(ILeaveTypeRepository leaveTypeRepository)
-        {
-            _leaveTypeRepository = leaveTypeRepository;
-            Include(new ILeaveRequestDtoValidator(_leaveTypeRepository));
-        }
+    public CreateLeaveRequestDtoValidator(ILeaveTypeRepository leaveTypeRepository)
+    {
+        _leaveTypeRepository = leaveTypeRepository;
+        Include(new ILeaveRequestDtoValidator(_leaveTypeRepository));
     }
 }

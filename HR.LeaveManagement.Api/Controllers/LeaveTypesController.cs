@@ -11,13 +11,22 @@ namespace HR.LeaveManagement.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class LeaveTypesController(IMediator mediator) : ControllerBase
+public class LeaveTypesController : ControllerBase
 {
+    private readonly IMediator _mediator;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public LeaveTypesController(IMediator mediator, IHttpContextAccessor httpContextAccessor)
+    {
+        _mediator = mediator;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
     // Get: api/<LeaveTypesController>
     [HttpGet]
     public async Task<ActionResult<List<LeaveTypeDto>>> Get()
     {
-        var leaveTypes = await mediator.Send(new GetLeaveTypeListRequest());
+        var leaveTypes = await _mediator.Send(new GetLeaveTypeListRequest());
         return Ok(leaveTypes);
     }
 
@@ -25,7 +34,7 @@ public class LeaveTypesController(IMediator mediator) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<LeaveTypeDto>> Get(int id)
     {
-        var leaveType = await mediator.Send(new GetLeaveTypeDetailRequest() { Id = id });
+        var leaveType = await _mediator.Send(new GetLeaveTypeDetailRequest() { Id = id });
         return Ok(leaveType);
     }
 
@@ -36,16 +45,17 @@ public class LeaveTypesController(IMediator mediator) : ControllerBase
     [Authorize(Roles = "Administrator")]
     public async Task<ActionResult<BaseCommandResponse>> Post([FromBody] CreateLeaveTypeDto leaveType)
     {
-        var command = new CreateLeaveTypeCommand()
-        {
-            LeaveTypeDto = leaveType
-        };
-        var response = await mediator.Send(command);
+        var user = _httpContextAccessor.HttpContext.User;
+        var command = new CreateLeaveTypeCommand { LeaveTypeDto = leaveType };
+        var response = await _mediator.Send(command);
         return Ok(response);
     }
 
     //PUT api/<LeaveTypesController>
-    [HttpPut]
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
     [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> Put([FromBody] LeaveTypeDto leaveType)
     {
@@ -53,12 +63,15 @@ public class LeaveTypesController(IMediator mediator) : ControllerBase
         {
             LeaveTypeDto = leaveType
         };
-        await mediator.Send(command);
+        await _mediator.Send(command);
         return NoContent();
     }
 
     //DELETE api/<LeaveTypesController>/5
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
     [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> Delete(int id)
     {
@@ -66,7 +79,7 @@ public class LeaveTypesController(IMediator mediator) : ControllerBase
         {
             Id = id
         };
-        await mediator.Send(command);
+        await _mediator.Send(command);
         return NoContent();
     }
 }

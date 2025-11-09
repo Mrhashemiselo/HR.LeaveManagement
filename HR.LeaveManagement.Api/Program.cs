@@ -1,10 +1,8 @@
+using HR.LeaveManagement.Api.Middlewares;
 using HR.LeaveManagement.Application;
 using HR.LeaveManagement.Identity;
 using HR.LeaveManagement.Infrastructure;
 using HR.LeaveManagement.Persistence;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,10 +62,14 @@ else
         options.SwaggerEndpoint("/openapi/v1.json", "Swagger");
     });
 }
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthentication();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseRouting();
 
 app.UseAuthentication();
 
@@ -84,46 +86,4 @@ void AddSwaggerDoc(IServiceCollection services)
     {
         options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
     });
-}
-
-sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider) : IOpenApiDocumentTransformer
-{
-    public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
-    {
-        var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
-        if (authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer"))
-        {
-            var requirements = new Dictionary<string, OpenApiSecurityScheme>
-            {
-                ["Bearer"] = new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                    In = ParameterLocation.Header,
-                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
-                        Enter 'Bearer' [space] and then your token in the text input below.
-                        \r\n\r\nExample: Bearer 12345abcdef'",
-                    Name = "Authorization"
-                }
-            };
-
-            document.Components ??= new OpenApiComponents();
-            document.Components.SecuritySchemes = requirements;
-
-            foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
-            {
-                operation.Value.Security.Add(new OpenApiSecurityRequirement
-                {
-                    [new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Id = "Bearer",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    }] = Array.Empty<string>()
-                });
-            }
-        }
-    }
 }

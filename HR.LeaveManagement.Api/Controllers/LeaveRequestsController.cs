@@ -3,19 +3,24 @@ using HR.LeaveManagement.Application.Features.LeaveRequests.Requests.Commands;
 using HR.LeaveManagement.Application.Features.LeaveRequests.Requests.Queries;
 using HR.LeaveManagement.Application.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR.LeaveManagement.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class LeaveRequestsController(IMediator mediator) : ControllerBase
 {
     // Get: api/<LeaveRequestsController>
     [HttpGet]
-    public async Task<ActionResult<List<LeaveRequestDto>>> Get()
+    public async Task<ActionResult<List<LeaveRequestListDto>>> Get(bool isLoggedInUser = false)
     {
-        var leaveRequests = await mediator.Send(new GetLeaveRequestListRequest());
+        var leaveRequests = await mediator.Send(new GetLeaveRequestListRequest()
+        {
+            IsLoggedInUser = isLoggedInUser
+        });
         return Ok(leaveRequests);
     }
 

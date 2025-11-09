@@ -1,21 +1,19 @@
 using FluentValidation;
 using HR.LeaveManagement.Application.Contracts.Persistence;
-using HR.LeaveManagement.Application.Contracts.Persistence;
 
-namespace HR.LeaveManagement.Application.DTOs.LeaveRequest.Validators
+namespace HR.LeaveManagement.Application.DTOs.LeaveRequest.Validators;
+
+public class UpdateLeaveRequestDtoValidator : AbstractValidator<UpdateLeaveRequestDto>
 {
-    public class UpdateLeaveRequestDtoValidator:AbstractValidator<UpdateLeaveRequestDto>
+    private readonly ILeaveTypeRepository _leaveTypeRepository;
+
+    public UpdateLeaveRequestDtoValidator(ILeaveTypeRepository leaveTypeRepository)
     {
-        private readonly ILeaveTypeRepository _leaveTypeRepository;
+        _leaveTypeRepository = leaveTypeRepository;
 
-        public UpdateLeaveRequestDtoValidator(ILeaveTypeRepository leaveTypeRepository)
-        {
-            _leaveTypeRepository = leaveTypeRepository;
-            
-            Include(new ILeaveRequestDtoValidator(_leaveTypeRepository));
+        Include(new ILeaveRequestDtoValidator(_leaveTypeRepository));
 
-            RuleFor(r => r.Id)
-                .NotNull().WithMessage("{PropertyName} must be present");
-        }
+        RuleFor(r => r.Id)
+            .NotNull().WithMessage("{PropertyName} must be present");
     }
 }

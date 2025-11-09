@@ -26,7 +26,11 @@ public class GetLeaveRequestDetailRequestHandler : IRequestHandler<GetLeaveReque
 
     public async Task<LeaveRequestDto> Handle(GetLeaveRequestDetailRequest request, CancellationToken cancellationToken)
     {
-        var leaveRequest = await _unitOfWork.LeaveRequestRepository.GetLeaveRequestWithDetails(request.Id);
-        return _mapper.Map<LeaveRequestDto>(leaveRequest);
+        var source = await _unitOfWork.LeaveRequestRepository.GetLeaveRequestWithDetails(request.Id);
+        var leaveRequest = _mapper.Map<LeaveRequestDto>(source);
+        leaveRequest.Employee = await _userService.GetEmployee(leaveRequest.RequestingEmployeeId);
+        return leaveRequest;
+        //var leaveRequest = await _unitOfWork.LeaveRequestRepository.GetLeaveRequestWithDetails(request.Id);
+        //return _mapper.Map<LeaveRequestDto>(leaveRequest);
     }
 }
