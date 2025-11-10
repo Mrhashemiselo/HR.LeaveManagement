@@ -26,7 +26,6 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             PasswordHash = hasher.HashPassword(null, "1qaz!QAZ")
 
         };
-        //admin.PasswordHash = hasher.HashPassword(admin, "1qaz!QAZ");
 
         // Regular User
         var user = new ApplicationUser
@@ -43,7 +42,6 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             ConcurrencyStamp = "2A7FA37A-4078-432D-88CE-09CB2C63D7A6",
             PasswordHash = hasher.HashPassword(null, "1qaz!QAZ")
         };
-        //user.PasswordHash = hasher.HashPassword(user, "1qaz!QAZ");
 
         builder.HasData(admin);
         builder.HasData(user);

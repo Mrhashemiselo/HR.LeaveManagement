@@ -12,5 +12,6 @@ public class LoginMV
     [DataType(DataType.Password)]
     public required string Password { get; set; }
 
+    [Required(AllowEmptyStrings = true)]
     public string? ReturnUrl { get; set; }
 }

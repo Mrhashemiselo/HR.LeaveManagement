@@ -37,7 +37,10 @@ public class MappingProfile : Profile
 
         CreateMap<LeaveAllocationDto, LeaveAllocationVM>().ReverseMap();
 
-        CreateMap<RegisterVM, HR.LeaveManagement.MVC.Services.Base.RegistrationRequest>().ReverseMap();
+        CreateMap<RegisterVM, HR.LeaveManagement.MVC.Services.Base.RegistrationRequest>()
+            .ForMember(dest => dest.Username,
+            opt => opt.MapFrom(src => src.UserName))
+            .ReverseMap();
 
         CreateMap<EmployeeVM, HR.LeaveManagement.MVC.Services.Base.Employee>().ReverseMap();
     }

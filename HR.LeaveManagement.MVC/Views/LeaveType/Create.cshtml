@@ -1,5 +1,4 @@
 ﻿@using HR.LeaveManagement.MVC.Models.LeaveType
-
 @model CreateLeaveTypeVM
 
 @{
@@ -36,5 +35,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -16,19 +16,15 @@ public class LeaveRequestRepository : GenericRepository<LeaveRequest>, ILeaveReq
         _dbContext = dbContext;
     }
 
-    public async Task<LeaveRequest> GetLeaveRequestWithDetails(int id)
-    {
-        return await _dbContext.LeaveRequests
-            .Include(i => i.LeaveType)
-            .FirstOrDefaultAsync(f => f.Id == id);
-    }
+    public async Task<LeaveRequest> GetLeaveRequestWithDetails(int id) =>
+    await _dbContext.LeaveRequests
+                .Include(q => q.LeaveType)
+                .FirstOrDefaultAsync(q => q.Id == id);
 
-    public async Task<List<LeaveRequest>> GetLeaveRequestsWithDetails()
-    {
-        return await _dbContext.LeaveRequests
+    public async Task<List<LeaveRequest>> GetLeaveRequestsWithDetails() =>
+        await _dbContext.LeaveRequests
             .Include(i => i.LeaveType)
             .ToListAsync();
-    }
 
     public async Task ChangeApprovalStatus(LeaveRequest leaveRequest, bool? approvalStatus)
     {
@@ -36,12 +32,10 @@ public class LeaveRequestRepository : GenericRepository<LeaveRequest>, ILeaveReq
         _dbContext.Entry(leaveRequest).State = EntityState.Modified;
     }
 
-    public async Task<List<LeaveRequest>> GetLeaveRequestsWithDetails(string userId)
-    {
-        var leaveRequests = await _dbContext.LeaveRequests
+    public async Task<List<LeaveRequest>> GetLeaveRequestsWithDetails(string userId) =>
+        await _dbContext.LeaveRequests
             .Where(w => w.RequestingEmployeeId == userId)
             .Include(i => i.LeaveType)
             .ToListAsync();
-        return leaveRequests;
-    }
+
 }

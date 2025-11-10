@@ -6,27 +6,29 @@ using HR.LeaveManagement.MVC.Services.Base;
 
 namespace HR.LeaveManagement.MVC.Services;
 
-public class LeaveRequestService : BaseHttpService, ILeaveRequestService
+public class LeaveRequestService : BaseHttpService<ILeaveRequestsClient>,
+    ILeaveRequestService
 {
     private readonly IMapper _mapper;
-    private readonly IClient _httpClient;
+    private readonly ILeaveRequestsClient _leaveRequestsClient;
     private readonly ILocalStorageService _localStorageService;
     public LeaveRequestService(IMapper mapper,
-        IClient httpClient,
-        ILocalStorageService localStorageService) : base(localStorageService, httpClient)
+        ILeaveRequestsClient leaveRequestsClient,
+        ILocalStorageService localStorageService) : base(localStorageService, leaveRequestsClient)
     {
         _mapper = mapper;
-        _httpClient = httpClient;
+        _leaveRequestsClient = leaveRequestsClient;
         _localStorageService = localStorageService;
     }
 
     public async Task ApproveLeaveRequest(int id, bool approved)
     {
-        AddBearerToken();
+        AddBearerToken(_leaveRequestsClient.HttpClient);
         try
         {
             var request = new ChangeLeaveRequestApprovalDto { Approved = approved, Id = id };
-            await _client.ChangeapprovalAsync(id, request);
+            //await _client.ChangeapprovalAsync(id, request);
+            await _client.ChangeApprovalAsync(id, request);
         }
         catch (Exception)
         {
@@ -41,8 +43,9 @@ public class LeaveRequestService : BaseHttpService, ILeaveRequestService
         {
             var response = new Response<int>();
             CreateLeaveRequestDto createLeaveRequest = _mapper.Map<CreateLeaveRequestDto>(leaveRequest);
-            AddBearerToken();
-            var apiResponse = await _client.LeaveRequestsPOSTAsync(createLeaveRequest);
+            AddBearerToken(_leaveRequestsClient.HttpClient);
+            //var apiResponse = await _client.LeaveRequestsPOSTAsync(createLeaveRequest);
+            var apiResponse = await _client.PostAsync(createLeaveRequest);
             if (apiResponse.Success)
             {
                 response.Data = apiResponse.Id;
@@ -70,8 +73,9 @@ public class LeaveRequestService : BaseHttpService, ILeaveRequestService
 
     public async Task<AdminLeaveRequestViewVM> GetAdminLeaveRequestList()
     {
-        AddBearerToken();
-        var leaveRequests = await _client.LeaveRequestsAllAsync(isLoggedInUser: false);
+        AddBearerToken(_leaveRequestsClient.HttpClient);
+        //var leaveRequests = await _client.LeaveRequestsAllAsync(isLoggedInUser: false);
+        var leaveRequests = await _client.GetAllAsync(isLoggedInUser: false);
 
         var model = new AdminLeaveRequestViewVM
         {
@@ -86,16 +90,19 @@ public class LeaveRequestService : BaseHttpService, ILeaveRequestService
 
     public async Task<LeaveRequestVM> GetLeaveRequest(int id)
     {
-        AddBearerToken();
-        var leaveRequest = await _client.LeaveRequestsGETAsync(id);
+        AddBearerToken(_leaveRequestsClient.HttpClient);
+        //var leaveRequest = await _client.LeaveRequestsGETAsync(id);
+        var leaveRequest = await _client.GetAsync(id);
         return _mapper.Map<LeaveRequestVM>(leaveRequest);
     }
 
     public async Task<EmployeeLeaveRequestViewVM> GetUserLeaveRequests()
     {
-        AddBearerToken();
-        var leaveRequests = await _client.LeaveRequestsAllAsync(isLoggedInUser: true);
-        var allocations = await _client.LeaveAllocationsAllAsync(isLoggedInUser: true);
+        AddBearerToken(_leaveRequestsClient.HttpClient);
+        //var leaveRequests = await _client.LeaveRequestsAllAsync(isLoggedInUser: true);
+        var leaveRequests = await _client.GetAllAsync(isLoggedInUser: true);
+        //var allocations = await _client.LeaveAllocationsAllAsync(isLoggedIn: true);
+        var allocations = await _client.GetAllAsync(isLoggedInUser: true);
         var model = new EmployeeLeaveRequestViewVM
         {
             LeaveAllocations = _mapper.Map<List<LeaveAllocationVM>>(allocations),

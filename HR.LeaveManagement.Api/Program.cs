@@ -3,11 +3,38 @@ using HR.LeaveManagement.Application;
 using HR.LeaveManagement.Identity;
 using HR.LeaveManagement.Infrastructure;
 using HR.LeaveManagement.Persistence;
+using NSwag;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
+
+//todo
+builder.Services.AddOpenApiDocument(options =>
+{
+    options.PostProcess = document =>
+    {
+        document.Info = new OpenApiInfo
+        {
+            Version = "v1",
+            Title = "ToDo API",
+            Description = "An ASP.NET Core Web API for managing ToDo items",
+            TermsOfService = "https://example.com/terms",
+            Contact = new OpenApiContact
+            {
+                Name = "Example Contact",
+                Url = "https://example.com/contact"
+            },
+            License = new OpenApiLicense
+            {
+                Name = "Example License",
+                Url = "https://example.com/license"
+            }
+        };
+    };
+});
+
 AddSwaggerDoc(builder.Services);
 builder.Services.AddOpenApi(options =>
 {
@@ -48,11 +75,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/openapi/v1.json", "Swagger");
-    });
+    app.UseOpenApi();
+    app.UseSwaggerUi();
+
+    //app.MapOpenApi();
+    //app.UseSwaggerUI(options =>
+    //{
+    //    options.SwaggerEndpoint("/openapi/v1.json", "Swagger");
+    //});
 }
 else
 {

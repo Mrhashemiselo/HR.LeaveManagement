@@ -3,12 +3,13 @@ using System.Net.Http.Headers;
 
 namespace HR.LeaveManagement.MVC.Services.Base;
 
-public class BaseHttpService
+public class BaseHttpService<TClient> where TClient : class
 {
     protected readonly ILocalStorageService _localStorage;
-    protected IClient _client;
+    protected TClient _client;
 
-    public BaseHttpService(ILocalStorageService localStorage, IClient client)
+
+    public BaseHttpService(ILocalStorageService localStorage, TClient client)
     {
         _localStorage = localStorage;
         _client = client;
@@ -43,9 +44,13 @@ public class BaseHttpService
         }
     }
 
-    protected void AddBearerToken()
+    protected void AddBearerToken(HttpClient httpClient)
     {
         if (_localStorage.Exists("token"))
-            _client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _localStorage.GetStorageValue<string>("token"));
+        {
+            var token = _localStorage.GetStorageValue<string>("token");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
     }
 }

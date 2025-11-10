@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HR.LeaveManagement.MVC.Contracts;
 using HR.LeaveManagement.MVC.Models;
 using HR.LeaveManagement.MVC.Services.Base;
 using Microsoft.AspNetCore.Authentication;
@@ -6,22 +7,25 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace HR.LeaveManagement.MVC.Contracts;
+namespace HR.LeaveManagement.MVC.Services;
 
-public class AuthenticationService : BaseHttpService, IAuthenticationService
+public class AuthenticationService : BaseHttpService<IAccountClient>,
+    HR.LeaveManagement.MVC.Contracts.IAuthenticationService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private JwtSecurityTokenHandler _tokenHandler;
     private readonly IMapper _mapper;
+    private readonly IAccountClient _accountClient;
 
-    public AuthenticationService(IClient client,
+    public AuthenticationService(IAccountClient accountClient,
         ILocalStorageService localStorage,
         IHttpContextAccessor httpContextAccessor,
-        IMapper mapper) : base(localStorage, client)
+        IMapper mapper) : base(localStorage, accountClient)
     {
         _httpContextAccessor = httpContextAccessor;
         _tokenHandler = new JwtSecurityTokenHandler();
         _mapper = mapper;
+        _accountClient = accountClient;
     }
     public async Task<bool> Authenticate(string email, string password)
     {

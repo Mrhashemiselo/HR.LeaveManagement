@@ -12,6 +12,7 @@ public class UsersController : Controller
         _authenticationService = authenticationService;
     }
 
+    [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
         return View();
@@ -20,17 +21,22 @@ public class UsersController : Controller
     [HttpPost]
     public async Task<IActionResult> Login(LoginMV login, string returnUrl)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+        {
+            ModelState.AddModelError("", "Login Attempt failed. Please try again.");
+        }
+        else
         {
             returnUrl ??= Url.Content("~/");
             var isLoggedIn = await _authenticationService.Authenticate(login.Email, login.Password);
             if (isLoggedIn)
                 return LocalRedirect(returnUrl);
         }
-        ModelState.AddModelError("", "Login Attempt failed. Please try again.");
+
         return View(login);
     }
 
+    [HttpGet]
     public IActionResult Register()
     {
         return View();
@@ -52,9 +58,10 @@ public class UsersController : Controller
     }
 
     [HttpPost]
-    public IActionResult Logout(string returnUrl)
+    public async Task<IActionResult> Logout(string returnUrl)
     {
         returnUrl ??= Url.Content("~/");
-        return View();
+        await _authenticationService.Logout();
+        return LocalRedirect(returnUrl);
     }
 }

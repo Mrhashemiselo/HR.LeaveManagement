@@ -1,4 +1,6 @@
+using HR.LeaveManagement.MVC;
 using HR.LeaveManagement.MVC.Contracts;
+using HR.LeaveManagement.MVC.Middlewares;
 using HR.LeaveManagement.MVC.Services;
 using HR.LeaveManagement.MVC.Services.Base;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,19 +10,37 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 
-builder.Services.AddHttpClient<IClient, Client>(c => c.BaseAddress = new Uri("https://localhost:7284"));
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/users/login");
+                });
+
+
+//builder.Services.AddHttpClient<IClient, Client>(c => c.BaseAddress = new Uri("https://localhost:7284"));
+builder.Services.AddHttpClient<IAccountClient, AccountClient>(c => c.BaseAddress = new Uri("https://localhost:7087"));
+builder.Services.AddHttpClient<ILeaveAllocationsClient, LeaveAllocationsClient>(c => c.BaseAddress = new Uri("https://localhost:7087"));
+builder.Services.AddHttpClient<ILeaveRequestsClient, LeaveRequestsClient>(c => c.BaseAddress = new Uri("https://localhost:7087"));
+builder.Services.AddHttpClient<ILeaveTypesClient, LeaveTypesClient>(c => c.BaseAddress = new Uri("https://localhost:7087"));
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<MappingProfile>();
+}, Assembly.GetExecutingAssembly());
+
+#region IOC
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
-
+builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>();
+#endregion
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -40,6 +60,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseMiddleware<RequestMiddleware>();
 
 app.UseAuthorization();
 
