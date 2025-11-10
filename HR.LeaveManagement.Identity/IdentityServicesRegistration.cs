@@ -25,7 +25,6 @@ public static class IdentityServicesRegistration
 
         services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
-            // Password rules — optional, you can adjust as needed
             options.Password.RequireDigit = true;
             options.Password.RequiredLength = 6;
             options.Password.RequireUppercase = true;

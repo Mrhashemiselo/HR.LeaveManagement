@@ -1,5 +1,4 @@
 ﻿@using HR.LeaveManagement.MVC.Models.LeaveRequest
-
 @model AdminLeaveRequestViewVM
 
 @{
@@ -18,7 +17,7 @@
             </div>
             <!-- /.info-box-content -->
         </div>
-        
+
     </div>
     <div class="col-md-3">
         <div class="info-box">
@@ -30,7 +29,7 @@
             </div>
             <!-- /.info-box-content -->
         </div>
-        
+
     </div>
     <div class="col-md-3">
         <div class="info-box">
@@ -42,7 +41,7 @@
             </div>
             <!-- /.info-box-content -->
         </div>
-        
+
     </div>
     <div class="col-md-3">
         <div class="info-box">
@@ -54,14 +53,14 @@
             </div>
             <!-- /.info-box-content -->
         </div>
-        
+
     </div>
 </div>
 
-<br/>
-<br/>
+<br />
+<br />
 
-<hr/>
+<hr />
 <h1>Leave Request Log</h1>
 <hr />
 <table id="tblData" class="table">
@@ -82,61 +81,62 @@
             <th>
                 Date Requested
             </th>
-            
+
             <th>
-               Approval Status
+                Approval Status
             </th>
-            
+
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.LeaveRequests) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.Firstname) @Html.DisplayFor(modelItem => item.Employee.Lastname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LeaveType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateRequested)
-            </td>
-            <td>
-                @if (item.Cancelled)
-                {
-                    <span class="badge badge-secondary">Cancelled</span>
-                }
-                else if (item.Approved == true)
-                {
-                    <span class="badge badge-success">Approved</span>
-                }
-                else if (item.Approved == false)
-                {
-                    <span class="badge badge-danger">Rejected</span>
-                }
-                else
-                {
-                    <span class="badge badge-warning">Pending Approval</span>
-                }
-            </td>
-            <td>
-                @if (!item.Cancelled)
-                {
-                    <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">
-                        <i class="fa fa-file"></i>Review
-                    </a>
-                }
-                
+        @foreach (var item in Model.LeaveRequests)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Firstname) @Html.DisplayFor(modelItem => item.Employee.Lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeaveType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateRequested)
+                </td>
+                <td>
+                    @if (item.Cancelled)
+                    {
+                        <span class="badge badge-secondary">Cancelled</span>
+                    }
+                    else if (item.Approved == true)
+                    {
+                        <span class="badge badge-success">Approved</span>
+                    }
+                    else if (item.Approved == false)
+                    {
+                        <span class="badge badge-danger">Rejected</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-warning">Pending Approval</span>
+                    }
+                </td>
+                <td>
+                    @if (!item.Cancelled)
+                    {
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">
+                            <i class="fa fa-file"></i>Review
+                        </a>
+                    }
 
-            </td>
-        </tr>
-}
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

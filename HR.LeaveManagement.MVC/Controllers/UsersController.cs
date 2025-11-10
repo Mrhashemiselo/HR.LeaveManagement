@@ -52,9 +52,10 @@ public class UsersController : Controller
     }
 
     [HttpPost]
-    public IActionResult Logout(string returnUrl)
+    public async Task<IActionResult> Logout(string returnUrl)
     {
         returnUrl ??= Url.Content("~/");
-        return View();
+        await _authenticationService.Logout();
+        return LocalRedirect(returnUrl);
     }
 }

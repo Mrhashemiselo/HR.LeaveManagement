@@ -95,7 +95,7 @@ public class LeaveRequestService : BaseHttpService, ILeaveRequestService
     {
         AddBearerToken();
         var leaveRequests = await _client.LeaveRequestsAllAsync(isLoggedInUser: true);
-        var allocations = await _client.LeaveAllocationsAllAsync(isLoggedInUser: true);
+        var allocations = await _client.LeaveAllocationsAllAsync(isLoggedIn: true);
         var model = new EmployeeLeaveRequestViewVM
         {
             LeaveAllocations = _mapper.Map<List<LeaveAllocationVM>>(allocations),

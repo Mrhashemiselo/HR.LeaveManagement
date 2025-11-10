@@ -12,6 +12,7 @@ public class CreateLeaveRequestVM
     [Required]
     [Display(Name = "End Date")]
     public DateTime EndDate { get; set; }
+
     public SelectList LeaveTypes { get; set; }
 
     [Required]
