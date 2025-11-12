@@ -36,14 +36,12 @@ builder.Services.AddAutoMapper(cfg =>
 
 #region IOC
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
-
-#region IOC
-builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>();
 #endregion
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
